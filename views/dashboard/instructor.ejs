@@ -1,0 +1,100 @@
+<% layout('layouts/boilerplate') %>
+
+<%- include('../partials/navbar') %>    
+<%- include('../partials/flash') %>    
+
+<div class="container mt-4">
+  <div class="row mb-4">
+    <div class="col-12">
+      <h1 class="display-4">Instructor Dashboard</h1>
+      <p class="text-muted">Manage your courses and track performance.</p>
+    </div>
+  </div>
+
+  <!-- Overall Stats -->
+  <div class="row mb-4">
+    <div class="col-md-4">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Total Courses</h5>
+          <h2 class="text-primary"><%=totalCourses%></h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Total Enrollments</h5>
+          <h2 class="text-success"><%=totalEnrollments%></h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="card text-center shadow-sm">
+        <div class="card-body">
+          <h5 class="card-title">Total Reviews</h5>
+          <h2 class="text-info"><%=totalReviews%></h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- My Courses -->
+  <div class="row mb-4">
+    <div class="col-12">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>My Courses</h3>
+        <a href="/courses/new" class="btn btn-primary">+ Create New Course</a>
+      </div>
+      
+      <% if(coursesWithStats && coursesWithStats.length > 0){ %>
+        <div class="row">
+          <% coursesWithStats.forEach(item => { %>
+            <div class="col-md-6 col-lg-4 mb-4">
+              <div class="card shadow-sm h-100">
+                <img src="<%=item.course.img%>" class="card-img-top" alt="<%=item.course.name%>" style="height: 200px; object-fit: cover;">
+                <div class="card-body">
+                  <h5 class="card-title"><%=item.course.name%></h5>
+                  <p class="text-muted small"><%=item.course.desc && item.course.desc.length > 100 ? item.course.desc.substring(0, 100) + '...' : item.course.desc%></p>
+                  
+                  <!-- Stats -->
+                  <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                      <small class="text-muted">Enrollments</small>
+                      <strong><%=item.totalEnrollments%></strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-1">
+                      <small class="text-muted">Reviews</small>
+                      <strong><%=item.totalReviews%></strong>
+                    </div>
+                    <% if(item.averageRating > 0){ %>
+                      <div class="d-flex justify-content-between">
+                        <small class="text-muted">Avg Rating</small>
+                        <strong><%=item.averageRating%> ⭐</strong>
+                      </div>
+                    <% } %>
+                  </div>
+                  
+                  <div class="d-flex gap-2">
+                    <a href="/courses/<%=item.course._id%>" class="btn btn-primary btn-sm flex-grow-1">View</a>
+                    <a href="/courses/<%=item.course._id%>/edit" class="btn btn-secondary btn-sm">Edit</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      <% } else { %>
+        <div class="alert alert-info text-center">
+          <h5>No courses created yet</h5>
+          <p>Start teaching by creating your first course!</p>
+          <a href="/courses/new" class="btn btn-primary">Create Course</a>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
+

@@ -1,0 +1,99 @@
+<% layout('layouts/boilerplate') %>
+
+<%- include('../partials/navbar') %>    
+
+<div class="row">
+    <div class="col-6 mx-auto">
+
+        <form action="/courses/<%=foundCourse._id%>?_method=PATCH" method="POST" class="needs-validation" novalidate>
+
+            <div class="mb-3">
+                <label for="naam">Name: </label>
+                <input type="text" class="form-control" name="name" id="naam" placeholder="Name of the course" value="<%=foundCourse.name%>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please enter the name field.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="img">Image: </label>
+                <input type="text" class="form-control" name="img" id="img" placeholder="Image URL of the course" value="<%=foundCourse.img%>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please enter the image URL field.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="paisa">Price: </label>
+                <input type="number" class="form-control" name="price" id="paisa" placeholder="price of the course" value="<%=foundCourse.price%>" required>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please enter the price field.
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label for="desc">Description: </label>
+                <textarea name="desc" id="desc" class="form-control" rows="5" placeholder="Description of course" required><%=foundCourse.desc%></textarea>
+                <div class="valid-feedback">
+                    Looks good!
+                </div>
+                <div class="invalid-feedback">
+                    Please enter the Description field.
+                </div>
+            </div>
+            
+            <div class="mb-3">
+                <label for="category">Category: </label>
+                <select class="form-control" name="category" id="category">
+                    <option value="General" <%=foundCourse.category === 'General' ? 'selected' : ''%>>General</option>
+                    <option value="Programming" <%=foundCourse.category === 'Programming' ? 'selected' : ''%>>Programming</option>
+                    <option value="Design" <%=foundCourse.category === 'Design' ? 'selected' : ''%>>Design</option>
+                    <option value="Business" <%=foundCourse.category === 'Business' ? 'selected' : ''%>>Business</option>
+                    <option value="Marketing" <%=foundCourse.category === 'Marketing' ? 'selected' : ''%>>Marketing</option>
+                    <option value="Photography" <%=foundCourse.category === 'Photography' ? 'selected' : ''%>>Photography</option>
+                    <option value="Music" <%=foundCourse.category === 'Music' ? 'selected' : ''%>>Music</option>
+                    <option value="Other" <%=foundCourse.category === 'Other' ? 'selected' : ''%>>Other</option>
+                </select>
+            </div>
+            
+            <button class="btn btn-sm btn-success" type="submit">Edit Course</button>
+
+        </form>
+
+    </div>
+        
+</div>
+
+<script>
+    // iife(immidiately invoked functional expression)
+    (() => {
+    'use strict'
+
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
+    const forms = document.querySelectorAll('.needs-validation')
+
+    // Loop over them and prevent submission
+    Array.from(forms).forEach(form => {
+        form.addEventListener('submit', event => {
+        if (!form.checkValidity()) {
+            event.preventDefault()
+            event.stopPropagation()
+        }
+
+        form.classList.add('was-validated')
+        }, false)
+    })
+    })()
+</script>
+
+</body>
+</html>

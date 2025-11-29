@@ -1,0 +1,200 @@
+<% layout('layouts/boilerplate') %>
+
+<%- include('../partials/navbar') %>    
+<%- include('../partials/flash') %>    
+
+<div class="container mt-4">
+<div class="row">
+    <!-- LEFT COLUMN: Course Info -->
+    <div class="col-lg-8 mt-3">
+        <div class="card shadow">
+            <img src="<%=foundCourse.img%>" class="card-img-top" alt="<%=foundCourse.name%>" style="height: 400px; object-fit: cover;">
+            <div class="card-body">
+                <h1 class="card-title"><%=foundCourse.name%></h1>
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h4 class="text-primary mb-0">₹<%=foundCourse.price%></h4>
+                    <% if(foundCourse.category){ %>
+                        <span class="badge bg-secondary"><%=foundCourse.category%></span>
+                    <% } %>
+                </div>
+                <p class="card-text"><%=foundCourse.desc%></p>
+                
+                <div class="d-flex gap-2 mb-3">
+                    <% if(currentUser && currentUser.role === 'instructor'){ %>
+                        <a href="/courses/<%=foundCourse._id%>/edit" class="btn btn-warning">Edit Course</a>
+                    <% } %>
+                    
+                    <% if(!isEnrolled && currentUser && currentUser.role === 'student'){ %>
+                        <form class="d-inline-block" action="/user/<%= foundCourse._id %>/add" method="post">
+                            <button type="submit" class="btn btn-primary">Enroll in Course</button> 
+                        </form>
+                    <% } else if(isEnrolled){ %>
+                        <span class="badge bg-success p-2">✓ Enrolled</span>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+
+        <!-- 🔥 Enhanced Course Lessons Section -->
+<div class="mt-5">
+  <h3 class="text-center mb-4">
+    <i class="bi bi-camera-video-fill me-2"></i> Course Lessons
+  </h3>
+
+  <% if(foundCourse.lessons && foundCourse.lessons.length > 0){ %>
+    <% foundCourse.lessons.forEach((lesson, index) => { %>
+      <div class="card mb-4 shadow-sm border-0">
+        <div class="card-body">
+          <h5 class="fw-bold">Lesson <%= index + 1 %>: <%= lesson.title %></h5>
+          <% if(lesson.description){ %>
+            <p class="text-muted mb-2"><%= lesson.description %></p>
+          <% } %>
+
+          <% 
+            // Check if user can view video: enrolled students or course instructor
+            const canViewVideo = isInstructor || isEnrolled;
+          %>
+          
+          <% if(canViewVideo){ %>
+            <div class="ratio ratio-16x9 rounded overflow-hidden border">
+              <video controls preload="metadata" class="w-100">
+                <source src="<%= lesson.videoUrl %>" type="video/mp4">
+                Your browser does not support video playback.
+              </video>
+            </div>
+          <% } else { %>
+            <div class="ratio ratio-16x9 rounded overflow-hidden border bg-light d-flex align-items-center justify-content-center">
+              <div class="text-center p-4">
+                <i class="bi bi-lock-fill" style="font-size: 3rem; color: #6c757d;"></i>
+                <p class="mt-3 text-muted">You must enroll in this course to view lessons</p>
+                <% if(currentUser && currentUser.role === 'student' && !isEnrolled){ %>
+                  <form action="/user/<%= foundCourse._id %>/add" method="post" class="mt-3">
+                    <button type="submit" class="btn btn-primary">Enroll Now</button>
+                  </form>
+                <% } else if(!currentUser){ %>
+                  <a href="/login" class="btn btn-primary mt-3">Login to Enroll</a>
+                <% } %>
+              </div>
+            </div>
+          <% } %>
+
+          <% if(currentUser && currentUser.role === 'instructor'){ %>
+            <form action="/courses/<%=foundCourse._id%>/lessons/<%=lesson._id%>?_method=DELETE" method="POST" class="mt-2 text-end">
+              <button class="btn btn-sm btn-outline-danger">Delete Lesson</button>
+            </form>
+          <% } %>
+          
+          <% if(isEnrolled && currentUser && currentUser.role === 'student'){ %>
+            <% 
+              const isCompleted = userProgress && userProgress.completedLessons && userProgress.completedLessons.some(
+                (lid) => lid.toString() === lesson._id.toString()
+              );
+            %>
+            <% if(!isCompleted){ %>
+              <form action="/courses/<%=foundCourse._id%>/lessons/<%=lesson._id%>/complete" method="POST" class="mt-2">
+                <button class="btn btn-sm btn-success">Mark as Completed</button>
+              </form>
+            <% } else { %>
+              <span class="badge bg-success mt-2">✓ Completed</span>
+            <% } %>
+          <% } %>
+        </div>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p class="text-center text-muted">No lessons added yet for this course.</p>
+  <% } %>
+
+  <% if(currentUser && currentUser.role === 'instructor'){ %>
+    <div class="text-center mt-4">
+      <a href="/courses/<%=foundCourse._id%>/lesson/new" class="btn btn-primary btn-lg">
+        ➕ Add New Lesson
+      </a>
+    </div>
+  <% } %>
+  
+  <% if(isEnrolled && userProgress){ %>
+    <div class="mt-4">
+      <h5>Your Progress</h5>
+      <div class="progress" style="height: 25px;">
+        <% 
+          const totalLessons = foundCourse.lessons ? foundCourse.lessons.length : 0;
+          const completedLessons = userProgress.completedLessons ? userProgress.completedLessons.length : 0;
+          const progressPercentage = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
+        %>
+        <div class="progress-bar bg-success" role="progressbar" style="width: <%=progressPercentage%>%" aria-valuenow="<%=progressPercentage%>" aria-valuemin="0" aria-valuemax="100">
+          <%=completedLessons%> / <%=totalLessons%> lessons completed (<%=progressPercentage%>%)
+        </div>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+        <!-- END of Lessons Section -->
+    </div>
+
+    <!-- RIGHT COLUMN: Reviews -->
+    <div class="col-lg-4 mt-3">
+        <div class="card shadow">
+            <div class="card-body">
+                <h3 class="card-title mb-4">Leave a Review</h3>
+
+        <% if(isEnrolled){ %>
+        <form action="/courses/<%=foundCourse._id%>/review" method="POST">
+            <div>
+                <fieldset class="starability-basic">
+                    <input type="radio" id="no-rate" class="input-no-rate" name="rating" value="0" checked aria-label="No rating." />
+                    <input type="radio" id="first-rate1" name="rating" value="1" />
+                    <label for="first-rate1" title="Terrible">1 star</label>
+                    <input type="radio" id="first-rate2" name="rating" value="2" />
+                    <label for="first-rate2" title="Not good">2 stars</label>
+                    <input type="radio" id="first-rate3" name="rating" value="3" />
+                    <label for="first-rate3" title="Average">3 stars</label>
+                    <input type="radio" id="first-rate4" name="rating" value="4" />
+                    <label for="first-rate4" title="Very good">4 stars</label>
+                    <input type="radio" id="first-rate5" name="rating" value="5" />
+                    <label for="first-rate5" title="Amazing">5 stars</label>
+                </fieldset>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label" for="comment">Comment: </label>
+                <textarea class="form-control" rows="3" name="comment" id="comment"></textarea>
+            </div>
+
+            <button class="btn btn-sm btn-success">Add Review</button>
+        </form>
+        <% } else { %>
+          <p class="text-muted">You must be enrolled in this course to leave a review.</p>
+        <% } %>
+
+                <div class="mt-4">
+                    <h5 class="mb-3">Reviews (<%=foundCourse.reviews ? foundCourse.reviews.length : 0%>)</h5>
+                    <% if(foundCourse.reviews && foundCourse.reviews.length > 0){ %>
+                        <% for(let review of foundCourse.reviews){ %>
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start mb-2">
+                                        <p class="starability-result mb-0" data-rating="<%=review.rating %>">
+                                            <%=review.rating %> ⭐
+                                        </p>
+                                        <% if(review.createdAt){ %>
+                                            <small class="text-muted"><%=review.createdAt.toDateString() %></small>
+                                        <% } %>
+                                    </div>
+                                    <p class="card-text mb-0"><%=review.comment %></p>
+                                </div>
+                            </div>
+                        <% } %>
+                    <% } else { %>
+                        <p class="text-muted">No reviews yet. Be the first to review!</p>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+</body>
+</html>

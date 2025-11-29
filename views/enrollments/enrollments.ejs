@@ -1,0 +1,35 @@
+<% layout('layouts/boilerplate') %>
+
+<%- include('../partials/navbar') %>    
+<%- include('../partials/flash') %>    
+
+<div class="container mt-4">
+  <h1 class="mb-4">My Enrollments</h1>
+  
+  <% if(user.enrollments && user.enrollments.length > 0){ %>
+    <div class="row">
+      <% user.enrollments.forEach(item => { %>
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card shadow-sm h-100">
+            <img src="<%=item.img%>" class="card-img-top" alt="<%=item.name%>" style="height: 200px; object-fit: cover;">
+            <div class="card-body">
+              <h5 class="card-title"><%=item.name%></h5>
+              <p class="text-muted">₹<%=item.price%></p>
+              <p class="card-text"><%=item.desc && item.desc.length > 100 ? item.desc.substring(0, 100) + '...' : item.desc%></p>
+              <a href="/courses/<%=item._id%>" class="btn btn-primary btn-sm w-100">View Course</a>
+            </div>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  <% } else { %>
+    <div class="alert alert-info text-center">
+      <h5>No enrollments yet</h5>
+      <p>Start learning by enrolling in a course!</p>
+      <a href="/courses" class="btn btn-primary">Browse Courses</a>
+    </div>
+  <% } %>
+</div>
+
+</body>
+</html>

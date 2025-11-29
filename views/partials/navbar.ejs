@@ -1,0 +1,42 @@
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #5DC7EC;">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo01" aria-controls="navbarTogglerDemo01" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo01">
+      <a class="navbar-brand" href="#">Online Learning Platform</a>
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/courses">Home</a>
+        </li>
+
+        <%if(currentUser && currentUser.role==='instructor'){%>
+          <li class="nav-item">
+          <a class="nav-link" href="/courses/new">New Course</a>
+        </li>
+        <%}%>
+        
+      </ul>
+      <div class="navbar-nav ml-auto">
+
+        <%if(!currentUser){%>
+          <a href="/login" class="nav-link">Login</a> 
+        <%} else{%>
+          <a href="#" class="nav-link text-capitalize">Hello, <%=currentUser.username%></a>
+          <%if(currentUser.role==='student'){%>
+            <a href="/dashboard/student" class="nav-link">Dashboard</a>
+          <%} else if(currentUser.role==='instructor'){%>
+            <a href="/dashboard/instructor" class="nav-link">Dashboard</a>
+          <%}%>
+          <a href="/user/enrollments" class="nav-link">
+            <i class="fas fa-shopping-cart"></i> 
+            <sup><span class="badge bg-danger"><%=currentUser.enrollments ? currentUser.enrollments.length : 0%></span></sup> 
+          </a>
+          <a href="/logout" class="nav-link">Logout</a>
+        <%}%>
+        
+        
+      </div>
+    </div>
+  </div>
+</nav>
