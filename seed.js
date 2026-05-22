@@ -21,25 +21,25 @@ const courses = [
         price:2499,
         img:"https://images.unsplash.com/photo-1653564142048-d5af2cf9b50f?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2230",
         desc:"Get started with real-world ML applications using Python, NumPy, Pandas, and Scikit-learn. Build predictive models and understand core algorithms."
-    },
-    {
-        name:"Database Management with MySQL", 
-        img: "https://images.unsplash.com/photo-1662026911591-335639b11db6?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8U1FMfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=900", 
-        price: 1199, 
-        desc: "Learn to design, query, and manage databases using SQL. Includes practical exercises with MySQL."
-    },
-    {
-        name:"Build Your First Android App" , 
-        img:"https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8QW5kcm9pZHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=900" , 
-        price: 1599 ,
-        desc: "Step-by-step course to design, develop, and deploy Android apps using Kotlin and Android Studio."
-    },
-    {
-        name:"Git & GitHub Masterclass" , 
-        img:"https://images.unsplash.com/photo-1654277041218-84424c78f0ae?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8R2l0SHVifGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=900" , 
-        price: 699 ,
-        desc: "Learn version control, branching, pull requests, and collaboration workflows used in real software teams."
     }
+    // {
+    //     name:"Database Management with MySQL", 
+    //     img: "https://images.unsplash.com/photo-1662026911591-335639b11db6?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8U1FMfGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=900", 
+    //     price: 1199, 
+    //     desc: "Learn to design, query, and manage databases using SQL. Includes practical exercises with MySQL."
+    // },
+    // {
+    //     name:"Build Your First Android App" , 
+    //     img:"https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8QW5kcm9pZHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&q=60&w=900" , 
+    //     price: 1599 ,
+    //     desc: "Step-by-step course to design, develop, and deploy Android apps using Kotlin and Android Studio."
+    // },
+    // {
+    //     name:"Git & GitHub Masterclass" , 
+    //     img:"https://images.unsplash.com/photo-1654277041218-84424c78f0ae?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8R2l0SHVifGVufDB8fDB8fHww&auto=format&fit=crop&q=60&w=900" , 
+    //     price: 699 ,
+    //     desc: "Learn version control, branching, pull requests, and collaboration workflows used in real software teams."
+    // }
 ]
 
 async function seedDB(){

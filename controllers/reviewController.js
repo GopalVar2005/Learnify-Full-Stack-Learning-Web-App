@@ -6,33 +6,36 @@ const { catchAsync } = require('../middleware/errorHandler');
 const createReview = catchAsync(async (req, res) => {
   const { id } = req.params;
   const { rating, comment } = req.body;
-  
+
   const course = await Course.findById(id);
   if (!course) {
-    req.flash('error', 'Course not found');
-    return res.redirect('/courses');
+    // req.flash('error', 'Course not found');
+    // return res.redirect('/courses');
+    return res.status(404).json({ success: false, message: 'Course not found' });
   }
-  
+
   // Check if user is enrolled
   const User = require('../models/User');
   const user = await User.findById(req.user._id);
   const isEnrolled = user.enrollments.some(
     (enrolledId) => enrolledId.toString() === id
   );
-  
+
   if (!isEnrolled) {
-    req.flash('error', 'You must be enrolled in this course to leave a review');
-    return res.redirect(`/courses/${id}`);
+    // req.flash('error', 'You must be enrolled in this course to leave a review');
+    // return res.redirect(`/courses/${id}`);
+    return res.status(403).json({ success: false, message: 'You must be enrolled in this course to leave a review' });
   }
-  
+
   const review = new Review({ rating, comment });
   course.reviews.push(review);
-  
+
   await review.save();
   await course.save();
-  
-  req.flash('success', 'Review added successfully');
-  res.redirect(`/courses/${id}`);
+
+  // req.flash('success', 'Review added successfully');
+  // res.redirect(`/courses/${id}`);
+  res.status(201).json({ success: true, message: 'Review added successfully', review });
 });
 
 module.exports = {

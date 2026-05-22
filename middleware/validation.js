@@ -2,23 +2,23 @@ const Joi = require('joi');
 const { courseSchema, reviewSchema } = require('../schema');
 
 // Course validation middleware
+// Validates incoming course data against Joi schema
 const validateCourse = (req, res, next) => {
   const { name, img, price, desc } = req.body;
   const { error } = courseSchema.validate({ name, img, price, desc });
   if (error) {
-    req.flash('error', error.details[0].message);
-    return res.redirect('back');
+    return res.status(400).json({ success: false, message: error.details[0].message });
   }
   next();
 };
 
 // Review validation middleware
+// Ensures rating and comment are valid
 const validateReview = (req, res, next) => {
   const { rating, comment } = req.body;
   const { error } = reviewSchema.validate({ rating, comment });
   if (error) {
-    req.flash('error', error.details[0].message);
-    return res.redirect('back');
+    return res.status(400).json({ success: false, message: error.details[0].message });
   }
   next();
 };
@@ -29,6 +29,7 @@ const enrollmentSchema = Joi.object({
 });
 
 // Auth validation schemas
+// Defines rules for registration (email format, password min length, etc.)
 const registerSchema = Joi.object({
   username: Joi.string().alphanum().min(3).max(30).required(),
   email: Joi.string().email().required(),
@@ -45,8 +46,7 @@ const loginSchema = Joi.object({
 const validateRegistration = (req, res, next) => {
   const { error } = registerSchema.validate(req.body);
   if (error) {
-    req.flash('error', error.details[0].message);
-    return res.redirect('/register');
+    return res.status(400).json({ success: false, message: error.details[0].message });
   }
   next();
 };
@@ -55,8 +55,7 @@ const validateRegistration = (req, res, next) => {
 const validateLogin = (req, res, next) => {
   const { error } = loginSchema.validate(req.body);
   if (error) {
-    req.flash('error', error.details[0].message);
-    return res.redirect('/login');
+    return res.status(400).json({ success: false, message: error.details[0].message });
   }
   next();
 };
